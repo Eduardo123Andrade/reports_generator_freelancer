@@ -40,13 +40,18 @@ defmodule ReportsGeneratorFreelancer do
   }
 
   def build(filename) do
-    filename
-    |> Parser.parse_file()
-    |> Enum.reduce(
-      generate_initial_report_data(),
-      &reduce/2
-    )
+    result =
+      filename
+      |> Parser.parse_file()
+      |> Enum.reduce(
+        generate_initial_report_data(),
+        &reduce/2
+      )
+
+    {:ok, result}
   end
+
+  def build(), do: {:error, "Please, provide the filename"}
 
   defp reduce(list, accumulator) do
     [name, hour_per_work, _day, month, year] = list
@@ -56,10 +61,6 @@ defmodule ReportsGeneratorFreelancer do
       "hours_per_month" => hours_per_month,
       "hours_per_year" => hours_per_year
     } = accumulator
-
-    if(is_nil(all_hours[name])) do
-      IO.inspect(name)
-    end
 
     all_hours = Map.put(all_hours, name, all_hours[name] + hour_per_work)
 

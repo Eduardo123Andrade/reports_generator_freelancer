@@ -5,7 +5,7 @@ defmodule ReportsGeneratorFreelancerTest do
     test "builds the report" do
       file_name = "gen_report_test.txt"
 
-      response = ReportsGeneratorFreelancer.build(file_name)
+      {_, response} = ReportsGeneratorFreelancer.build(file_name)
 
       expected_response = %{
         "all_hours" => %{
@@ -175,6 +175,14 @@ defmodule ReportsGeneratorFreelancerTest do
           "Vinicius" => %{2016 => 0, 2017 => 0, 2018 => 0, 2019 => 0, 2020 => 0}
         }
       }
+
+      assert response == expected_response
+    end
+
+    test "when filename isn't provider throw an erro" do
+      {_, response} = ReportsGeneratorFreelancer.build()
+
+      expected_response = "Please, provide the filename"
 
       assert response == expected_response
     end
